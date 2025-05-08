@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Towye Grid Random</title>
+  <link href="https://fonts.googleapis.com/css2?family=Anonymous+Pro&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: white;
+    }
+    #towye-grid {
+      display: grid;
+      grid-template-columns: repeat(20, 1fr);
+      grid-template-rows: repeat(10, 1fr);
+      gap: 2px;
+      width: 100%;
+      max-width: 800px;
+      margin: auto;
+      font-family: 'Anonymous Pro', monospace;
+      font-size: 16px;
+      color: #00ff63; /* Default arrow color */
+      background: white;
+      padding: 20px;
+    }
+    .rotate {
+      animation: slowspin 6s linear infinite;
+      display: inline-block;
+    }
+    .towye-letter {
+      color: black !important;
+    }
+    @keyframes slowspin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div id="towye-grid"></div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const grid = document.getElementById("towye-grid");
+      const rows = 10;
+      const cols = 20;
+      const total = rows * cols;
+      const arrows = ["→", "↑", "↓", "←", "↗", "↘", "↙", "↖"];
+      const cells = [];
+
+      function getRandomArrow() {
+        return arrows[Math.floor(Math.random() * arrows.length)];
+      }
+
+      function renderGrid() {
+        for (let i = 0; i < total; i++) {
+          const cell = document.createElement("div");
+          cell.classList.add("rotate");
+          cell.style.textAlign = "center";
+          cell.style.transition = "0.3s";
+          cell.style.color = "#00ff63";
+          cell.textContent = getRandomArrow();
+          grid.appendChild(cell);
+          cells.push(cell);
+        }
+      }
+
+      function randomizeArrows() {
+        cells.forEach(cell => {
+          cell.textContent = getRandomArrow();
+          cell.style.color = "#00ff63";
+          cell.classList.remove("towye-letter");
+        });
+      }
+
+      function formRandomTowye() {
+        const indices = [];
+        while (indices.length < 5) {
+          const rand = Math.floor(Math.random() * total);
+          if (!indices.includes(rand)) {
+            indices.push(rand);
+          }
+        }
+        const letters = ["t", "o", "w", "y", "e"];
+        indices.forEach((index, i) => {
+          if (cells[index]) {
+            cells[index].textContent = letters[i];
+            cells[index].classList.add("towye-letter");
+            cells[index].style.color = "black";
+          }
+        });
+      }
+
+      function loop() {
+        setInterval(() => {
+          randomizeArrows();
+          formRandomTowye();
+        }, 2000);
+      }
+
+      renderGrid();
+      loop();
+    });
+  </script>
+</body>
+</html>
