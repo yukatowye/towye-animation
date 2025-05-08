@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Towye Grid</title>
+  <style>
+    body {
+      background: white;
+    }
+    #towye-grid {
+      display: grid;
+      grid-template-columns: repeat(20, 1fr);
+      grid-template-rows: repeat(10, 1fr);
+      gap: 2px;
+      width: 100%;
+      max-width: 800px;
+      margin: auto;
+      font-family: monospace;
+      font-size: 16px;
+      color: black;
+      background: white;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="towye-grid"></div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const grid = document.getElementById("towye-grid");
+      const rows = 10;
+      const cols = 20;
+      const total = rows * cols;
+      const arrows = ["→", "↑", "↓", "←", "↗", "↘", "↙", "↖"];
+      const cells = [];
+
+      function getRandomArrow() {
+        return arrows[Math.floor(Math.random() * arrows.length)];
+      }
+
+      function renderGrid() {
+        for (let i = 0; i < total; i++) {
+          const cell = document.createElement("div");
+          cell.style.textAlign = "center";
+          cell.style.transition = "0.3s";
+          cell.textContent = getRandomArrow();
+          grid.appendChild(cell);
+          cells.push(cell);
+        }
+      }
+
+      function randomizeArrows() {
+        cells.forEach(cell => {
+          cell.textContent = getRandomArrow();
+        });
+      }
+
+      function formTOWYE() {
+        const map = [
+          { row: 3, col: 2, char: "T" },
+          { row: 3, col: 6, char: "O" },
+          { row: 3, col:10, char: "W" },
+          { row: 3, col:14, char: "Y" },
+          { row: 3, col:18, char: "E" }
+        ];
+        map.forEach(({ row, col, char }) => {
+          const index = row * cols + col;
+          if (cells[index]) cells[index].textContent = char;
+        });
+      }
+
+      function loop() {
+        let toggle = false;
+        setInterval(() => {
+          if (toggle) {
+            randomizeArrows();
+          } else {
+            formTOWYE();
+          }
+          toggle = !toggle;
+        }, 2000);
+      }
+
+      renderGrid();
+      loop();
+    });
+  </script>
+</body>
+</html>
